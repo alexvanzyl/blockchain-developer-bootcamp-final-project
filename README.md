@@ -1,7 +1,7 @@
 # S🌱🌱D
 
 ## Description
-Siid (_pronouned seed_) is decentralized crowdfunding application that allows campaign backers to vote on how funding is spent by the campaign owners. The objective is to bring complete transparency to crowdfunding and mitigate fraudulent campaigns.
+Siid (_pronounced seed_) is decentralized crowdfunding application that allows campaign backers to vote on how funding is spent by the campaign owners. The objective is to bring complete transparency to crowdfunding and mitigate fraudulent campaigns.
 
 ## Flows
 
