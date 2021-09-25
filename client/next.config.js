@@ -2,6 +2,11 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["tailwindui.com"],
+    domains: [
+      "tailwindui.com",
+      "autoconception.com",
+      "globscoop.com",
+      "images.hgmsites.net",
+    ],
   },
 };
