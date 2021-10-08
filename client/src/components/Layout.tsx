@@ -1,4 +1,5 @@
 import Navbar from "@components/Navbar";
+import { Web3Provider } from "./providers";
 
 type LayoutProps = {
   pageName: string;
@@ -7,7 +8,7 @@ type LayoutProps = {
 
 const Layout = ({ pageName, children }: LayoutProps): JSX.Element => {
   return (
-    <>
+    <Web3Provider>
       <Navbar />
       <div className="py-10">
         <header>
@@ -23,7 +24,7 @@ const Layout = ({ pageName, children }: LayoutProps): JSX.Element => {
           </div>
         </main>
       </div>
-    </>
+    </Web3Provider>
   );
 };
 

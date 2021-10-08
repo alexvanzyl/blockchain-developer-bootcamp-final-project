@@ -1,14 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
+import Button from "@components/Button";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Logo from "./Logo";
 import NavbarMobile from "./NavbarMobile";
+import { useWeb3 } from "./providers";
+import { useAccount } from "./web3/hooks/useAccount";
 
 function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Navbar = (): JSX.Element => {
+  const { connect, isLoading, isWeb3Loaded } = useWeb3();
+  const { account } = useAccount();
+
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -42,12 +48,31 @@ const Navbar = (): JSX.Element => {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <button
-                    type="button"
-                    className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                  >
-                    <span>Connect Wallet</span>
-                  </button>
+                  {isLoading ? (
+                    <Button
+                      type="button"
+                      className="cursor-not-allowed opacity-50 relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      disabled
+                    >
+                      Loading...
+                    </Button>
+                  ) : isWeb3Loaded ? (
+                    <Button type="button" onClick={connect}>
+                      <span>Connect Wallet</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        window.open(
+                          "https://metamask.io/download.html",
+                          "_blank"
+                        )
+                      }
+                    >
+                      <span>Install Metamask</span>
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
