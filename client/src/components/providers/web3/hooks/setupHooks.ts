@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { handler as createUseAccount } from "./useAccount";
 
 export type Web3Hooks = {
-  useAccount: () => { account: string };
+  useAccount: () => { account: string | null };
 };
 
 export const setupHooks = (

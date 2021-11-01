@@ -34,7 +34,8 @@ export default function Web3Provider({ children }: Props): JSX.Element {
 
   useEffect(() => {
     const loadProvider = async () => {
-      const provider: any = await detectEthereumProvider();
+      const provider =
+        (await detectEthereumProvider()) as ethers.providers.ExternalProvider;
       if (provider) {
         const web3 = new ethers.providers.Web3Provider(provider);
         setWeb3Api({
@@ -53,16 +54,16 @@ export default function Web3Provider({ children }: Props): JSX.Element {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { web3, provider } = web3Api;
+    const { web3 } = web3Api;
 
     return {
       ...web3Api,
       isWeb3Loaded: web3 != null,
       getHooks: () => setupHooks(web3),
-      connect: provider
+      connect: web3
         ? async () => {
             try {
-              await provider.request({ method: "eth_requestAccounts" });
+              await web3.send("eth_requestAccounts", []);
             } catch {
               location.reload();
             }
@@ -85,6 +86,5 @@ export function useWeb3() {
 
 export function useHooks<T>(cb: (h: Web3Hooks) => T) {
   const { getHooks } = useWeb3();
-  console.log("SSS");
   return cb(getHooks());
 }

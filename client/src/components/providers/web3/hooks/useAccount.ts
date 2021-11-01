@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useState<string | null>(null);
 
   useEffect(() => {
     const getAccount = async () => {
@@ -10,7 +10,13 @@ export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
       if (accounts) setAccount(accounts[0]);
     };
 
-    web3 && getAccount();
+    getAccount();
+  });
+
+  useEffect(() => {
+    web3?.provider.on("accountsChanged", (accounts: string[]) =>
+      setAccount(accounts[0] ?? null)
+    );
   });
 
   return {
