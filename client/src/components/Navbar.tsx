@@ -7,9 +7,9 @@ import NavbarMobile from "./NavbarMobile";
 import { useWeb3 } from "./providers";
 import { useAccount } from "./web3/hooks/useAccount";
 
-function classNames(...classes: Array<string>) {
-  return classes.filter(Boolean).join(" ");
-}
+// function classNames(...classes: Array<string>) {
+//   return classes.filter(Boolean).join(" ");
+// }
 
 const Navbar = (): JSX.Element => {
   const { connect, isLoading, isWeb3Loaded } = useWeb3();
@@ -61,7 +61,7 @@ const Navbar = (): JSX.Element => {
                         Loading...
                       </Button>
                     ) : isWeb3Loaded ? (
-                      account ? (
+                      account.data ? (
                         <Button
                           type="button"
                           variant="yellow"
@@ -95,10 +95,10 @@ const Navbar = (): JSX.Element => {
           </>
         )}
       </Disclosure>
-      {account && (
+      {account.data && (
         <div className="flex justify-end max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="py-2 px-4 sm:px-6 lg:px-8 rounded-none md:rounded-b md:w-auto w-full bg-green-500 text-white">
-            {account}
+            {account.data}
           </div>
         </div>
       )}

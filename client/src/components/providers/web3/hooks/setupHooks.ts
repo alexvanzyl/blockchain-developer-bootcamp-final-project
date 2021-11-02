@@ -1,8 +1,9 @@
 import { ethers } from "ethers";
+import { SWRResponse } from "swr";
 import { handler as createUseAccount } from "./useAccount";
 
 export type Web3Hooks = {
-  useAccount: () => { account: string | null };
+  useAccount: () => { account: SWRResponse<string | undefined, unknown> };
 };
 
 export const setupHooks = (
