@@ -6,6 +6,7 @@ import Logo from "./Logo";
 import NavbarMobile from "./NavbarMobile";
 import { useWeb3 } from "./providers";
 import { useAccount } from "./web3/hooks/useAccount";
+import { useNetwork } from "./web3/hooks/useNetwork";
 
 // function classNames(...classes: Array<string>) {
 //   return classes.filter(Boolean).join(" ");
@@ -14,6 +15,7 @@ import { useAccount } from "./web3/hooks/useAccount";
 const Navbar = (): JSX.Element => {
   const { connect, isLoading, isWeb3Loaded } = useWeb3();
   const { account } = useAccount();
+  const { network } = useNetwork();
 
   return (
     <>
@@ -64,7 +66,7 @@ const Navbar = (): JSX.Element => {
                       account.data ? (
                         <Button
                           type="button"
-                          variant="yellow"
+                          variant="green"
                           className="cursor-default"
                         >
                           <span>Hi there</span>
@@ -96,9 +98,12 @@ const Navbar = (): JSX.Element => {
         )}
       </Disclosure>
       {account.data && (
-        <div className="flex justify-end max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="py-2 px-4 sm:px-6 lg:px-8 rounded-none md:rounded-b md:w-auto w-full bg-green-500 text-white">
+        <div className="flex flex-col sm:flex-row sm:justify-end max-w-7xl mx-auto sm:px-6 lg:px-8">
+          <div className="text-sm truncate py-2 px-4 sm:px-6 lg:px-8 rounded-none md:rounded-bl md:w-auto w-full bg-green-500 text-white">
             {account.data}
+          </div>
+          <div className="text-sm py-2 px-4 sm:px-6 lg:px-8 rounded-none md:rounded-br md:w-auto w-full bg-yellow-500 text-white">
+            {network.data?.name}
           </div>
         </div>
       )}

@@ -1,9 +1,13 @@
 import { ethers } from "ethers";
 import { SWRResponse } from "swr";
 import { handler as createUseAccount } from "./useAccount";
+import { handler as createUseNetwork } from "./useNetwork";
 
 export type Web3Hooks = {
   useAccount: () => { account: SWRResponse<string | undefined, unknown> };
+  useNetwork: () => {
+    network: SWRResponse<ethers.providers.Network | undefined, unknown>;
+  };
 };
 
 export const setupHooks = (
@@ -11,5 +15,6 @@ export const setupHooks = (
 ): Web3Hooks => {
   return {
     useAccount: createUseAccount(web3),
+    useNetwork: createUseNetwork(web3),
   };
 };
