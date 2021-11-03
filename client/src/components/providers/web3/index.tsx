@@ -3,6 +3,10 @@ import { ethers } from "ethers";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { setupHooks, Web3Hooks } from "./hooks/setupHooks";
 
+export type ExternalProviderExtended = ethers.providers.ExternalProvider & {
+  on: (event: string, cb: (...args: any[]) => void) => void;
+};
+
 type Props = {
   children: React.ReactNode;
 };
@@ -35,7 +39,7 @@ export default function Web3Provider({ children }: Props): JSX.Element {
   useEffect(() => {
     const loadProvider = async () => {
       const provider =
-        (await detectEthereumProvider()) as ethers.providers.ExternalProvider;
+        (await detectEthereumProvider()) as ExternalProviderExtended;
       if (provider) {
         const web3 = new ethers.providers.Web3Provider(provider);
         setWeb3Api({

@@ -103,7 +103,7 @@ const Navbar = (): JSX.Element => {
             {account.data}
           </div>
           <div className="text-sm py-2 px-4 sm:px-6 lg:px-8 rounded-none md:rounded-br md:w-auto w-full bg-yellow-500 text-white">
-            {network.data?.name}
+            {network.data}
           </div>
         </div>
       )}

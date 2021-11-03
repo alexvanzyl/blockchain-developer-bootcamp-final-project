@@ -6,7 +6,7 @@ import { handler as createUseNetwork } from "./useNetwork";
 export type Web3Hooks = {
   useAccount: () => { account: SWRResponse<string | undefined, unknown> };
   useNetwork: () => {
-    network: SWRResponse<ethers.providers.Network | undefined, unknown>;
+    network: SWRResponse<string | undefined, unknown>;
   };
 };
 

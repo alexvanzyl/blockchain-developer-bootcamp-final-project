@@ -1,10 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import useSWR from "swr";
-
-type ExternalProviderExtended = ethers.providers.ExternalProvider & {
-  on: (event: string, cb: (...args: any[]) => void) => void;
-};
+import { ExternalProviderExtended } from "..";
 
 export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
   const { mutate, ...rest } = useSWR(
