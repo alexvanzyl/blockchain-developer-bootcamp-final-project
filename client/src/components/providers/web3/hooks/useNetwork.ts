@@ -1,7 +1,13 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import useSWR from "swr";
+import useSWR, { SWRResponse } from "swr";
 import { ExternalProviderExtended } from "..";
+
+export interface NetworkResponse extends SWRResponse<string | undefined, unknown> {
+  target: number;
+  isSupported: boolean;
+  isLoading: boolean;
+}
 
 const NETWORKS: Record<number, string> = {
   1: "Mainnet",
@@ -12,8 +18,10 @@ const NETWORKS: Record<number, string> = {
   1337: "Ganache",
 };
 
+const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID];
+
 export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
-  const { mutate, ...rest } = useSWR(
+  const { data, error, mutate, ...rest } = useSWR(
     () => (web3 ? "webs/network" : null),
     async () => {
       const network = await web3?.getNetwork();
@@ -21,13 +29,22 @@ export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
     }
   );
 
+  const provider = web3?.provider;
   useEffect(() => {
-    const provider = web3?.provider;
     provider &&
       (provider as ExternalProviderExtended).on("chainChanged", (chainId) => {
         mutate(NETWORKS[parseInt(chainId, 16)]);
       });
-  });
+  }, [provider, mutate]);
 
-  return { network: { mutate, ...rest } };
+  return {
+    network: {
+      data,
+      mutate,
+      target: targetNetwork,
+      isSupported: data === targetNetwork,
+      isLoading: !data && !error,
+      ...rest,
+    },
+  };
 };

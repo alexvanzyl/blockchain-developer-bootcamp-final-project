@@ -1,7 +1,10 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import useSWR from "swr";
+import useSWR, { SWRResponse } from "swr";
 import { ExternalProviderExtended } from "..";
+
+export interface AccountResponse
+  extends SWRResponse<string | undefined, unknown> {}
 
 export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
   const { mutate, ...rest } = useSWR(
@@ -19,7 +22,7 @@ export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
         "accountsChanged",
         (accounts: string[]) => mutate(accounts[0] ?? null)
       );
-  });
+  }, [mutate, provider]);
 
   return { account: { mutate, ...rest } };
 };

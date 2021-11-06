@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import Button from "@components/Button";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
@@ -104,6 +103,11 @@ const Navbar = (): JSX.Element => {
           </div>
           <div className="text-sm py-2 px-4 sm:px-6 lg:px-8 rounded-none md:rounded-br md:w-auto w-full bg-yellow-500 text-white">
             {network.data}
+            {!network.isSupported && !network.isLoading && (
+              <span className="ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                Unsupported
+              </span>
+            )}
           </div>
         </div>
       )}

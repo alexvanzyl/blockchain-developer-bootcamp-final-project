@@ -1,4 +1,5 @@
 import Navbar from "@components/Navbar";
+import WrongNetworkNotification from "@components/WrongNetworkNotification";
 import { Web3Provider } from "./providers";
 
 type LayoutProps = {
@@ -9,6 +10,7 @@ type LayoutProps = {
 const Layout = ({ pageName, children }: LayoutProps): JSX.Element => {
   return (
     <Web3Provider>
+      <WrongNetworkNotification />
       <Navbar />
       <div className="py-5 sm:py-10">
         <header>
