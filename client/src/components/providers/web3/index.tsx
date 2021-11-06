@@ -23,7 +23,7 @@ interface Web3State extends CreateWeb3State {
 }
 
 interface Web3Context extends Web3State {
-  isWeb3Loaded: boolean;
+  requireInstall: boolean;
   connect: () => Promise<void> | void;
 }
 
@@ -77,11 +77,11 @@ export default function Web3Provider({ children }: Props): JSX.Element {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { web3 } = web3Api;
+    const { web3, isLoading } = web3Api;
 
     return {
       ...web3Api,
-      isWeb3Loaded: web3 != null,
+      requireInstall: !isLoading && !web3,
       connect: web3
         ? async () => {
             try {

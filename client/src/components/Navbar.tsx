@@ -11,7 +11,7 @@ import { useAccount, useNetwork } from "./web3/hooks";
 // }
 
 const Navbar = (): JSX.Element => {
-  const { connect, isLoading, isWeb3Loaded } = useWeb3();
+  const { connect, isLoading, requireInstall } = useWeb3();
   const { account } = useAccount();
   const { network } = useNetwork();
 
@@ -60,21 +60,15 @@ const Navbar = (): JSX.Element => {
                       >
                         Loading...
                       </Button>
-                    ) : isWeb3Loaded ? (
-                      account.data ? (
-                        <Button
-                          type="button"
-                          variant="green"
-                          className="cursor-default"
-                        >
-                          <span>Hi there</span>
-                        </Button>
-                      ) : (
-                        <Button type="button" onClick={connect}>
-                          <span>Connect Wallet</span>
-                        </Button>
-                      )
-                    ) : (
+                    ) : account.data ? (
+                      <Button
+                        type="button"
+                        variant="green"
+                        className="cursor-default"
+                      >
+                        <span>Hi there</span>
+                      </Button>
+                    ) : requireInstall ? (
                       <Button
                         type="button"
                         onClick={() =>
@@ -85,6 +79,10 @@ const Navbar = (): JSX.Element => {
                         }
                       >
                         <span>Install Metamask</span>
+                      </Button>
+                    ) : (
+                      <Button type="button" onClick={connect}>
+                        <span>Connect Wallet</span>
                       </Button>
                     )}
                   </div>
