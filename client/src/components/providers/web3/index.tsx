@@ -11,30 +11,48 @@ type Props = {
   children: React.ReactNode;
 };
 
-interface Web3State {
+interface CreateWeb3State {
   provider: any | null;
   web3: ethers.providers.Web3Provider | null;
   contract: null;
   isLoading: boolean;
 }
 
+interface Web3State extends CreateWeb3State {
+  hooks: Web3Hooks;
+}
+
 interface Web3Context extends Web3State {
   isWeb3Loaded: boolean;
-  getHooks: () => Web3Hooks;
   connect: () => Promise<void> | void;
 }
 
-const initialState = {
-  provider: null,
-  web3: null,
-  contract: null,
-  isLoading: true,
+const createWeb3State = ({
+  web3,
+  provider,
+  contract,
+  isLoading,
+}: CreateWeb3State): Web3State => {
+  return {
+    web3,
+    provider,
+    contract,
+    isLoading,
+    hooks: setupHooks(web3),
+  };
 };
 
 const Web3Context = createContext({} as Web3Context);
 
 export default function Web3Provider({ children }: Props): JSX.Element {
-  const [web3Api, setWeb3Api] = useState<Web3State>(initialState);
+  const [web3Api, setWeb3Api] = useState<Web3State>(
+    createWeb3State({
+      provider: null,
+      web3: null,
+      contract: null,
+      isLoading: true,
+    })
+  );
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -47,6 +65,7 @@ export default function Web3Provider({ children }: Props): JSX.Element {
           web3,
           contract: null,
           isLoading: false,
+          hooks: setupHooks(web3),
         });
       } else {
         setWeb3Api((api) => ({ ...api, isLoading: false }));
@@ -63,7 +82,6 @@ export default function Web3Provider({ children }: Props): JSX.Element {
     return {
       ...web3Api,
       isWeb3Loaded: web3 != null,
-      getHooks: () => setupHooks(web3),
       connect: web3
         ? async () => {
             try {
@@ -89,6 +107,6 @@ export function useWeb3() {
 }
 
 export function useHooks<T>(cb: (h: Web3Hooks) => T) {
-  const { getHooks } = useWeb3();
-  return cb(getHooks());
+  const { hooks } = useWeb3();
+  return cb(hooks);
 }

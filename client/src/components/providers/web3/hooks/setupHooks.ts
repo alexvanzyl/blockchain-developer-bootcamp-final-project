@@ -3,8 +3,8 @@ import { handler as createUseAccount, AccountResponse } from "./useAccount";
 import { handler as createUseNetwork, NetworkResponse } from "./useNetwork";
 
 export type Web3Hooks = {
-  useAccount: () => { account: AccountResponse };
-  useNetwork: () => { network: NetworkResponse };
+  useAccount: () => AccountResponse;
+  useNetwork: () => NetworkResponse;
 };
 
 export const setupHooks = (

@@ -4,8 +4,7 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Logo from "./Logo";
 import NavbarMobile from "./NavbarMobile";
 import { useWeb3 } from "./providers";
-import { useAccount } from "./web3/hooks/useAccount";
-import { useNetwork } from "./web3/hooks/useNetwork";
+import { useAccount, useNetwork } from "./web3/hooks";
 
 // function classNames(...classes: Array<string>) {
 //   return classes.filter(Boolean).join(" ");
@@ -103,7 +102,7 @@ const Navbar = (): JSX.Element => {
           </div>
           <div className="text-sm py-2 px-4 sm:px-6 lg:px-8 rounded-none md:rounded-br md:w-auto w-full bg-yellow-500 text-white">
             {network.data}
-            {!network.isSupported && !network.isLoading && (
+            {network.hasInitialResponse && !network.isSupported && (
               <span className="ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                 Unsupported
               </span>

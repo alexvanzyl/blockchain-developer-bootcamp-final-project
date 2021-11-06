@@ -6,23 +6,24 @@ import { ExternalProviderExtended } from "..";
 export interface AccountResponse
   extends SWRResponse<string | undefined, unknown> {}
 
-export const handler = (web3: ethers.providers.Web3Provider | null) => () => {
-  const { mutate, ...rest } = useSWR(
-    () => (web3 ? "web3/accounts" : null),
-    async () => {
-      const accounts = await web3?.listAccounts();
-      if (accounts) return accounts[0];
-    }
-  );
+export const handler =
+  (web3: ethers.providers.Web3Provider | null) => (): AccountResponse => {
+    const { mutate, ...rest } = useSWR(
+      () => (web3 ? "web3/accounts" : null),
+      async () => {
+        const accounts = await web3?.listAccounts();
+        if (accounts) return accounts[0];
+      }
+    );
 
-  const provider = web3?.provider;
-  useEffect(() => {
-    provider &&
-      (provider as ExternalProviderExtended).on(
-        "accountsChanged",
-        (accounts: string[]) => mutate(accounts[0] ?? null)
-      );
-  }, [mutate, provider]);
+    const provider = web3?.provider;
+    useEffect(() => {
+      provider &&
+        (provider as ExternalProviderExtended).on(
+          "accountsChanged",
+          (accounts: string[]) => mutate(accounts[0] ?? null)
+        );
+    }, [mutate, provider]);
 
-  return { account: { mutate, ...rest } };
-};
+    return { mutate, ...rest };
+  };
