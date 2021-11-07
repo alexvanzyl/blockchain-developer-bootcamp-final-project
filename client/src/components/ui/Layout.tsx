@@ -1,6 +1,6 @@
-import Navbar from "@components/Navbar";
-import WrongNetworkNotification from "@components/WrongNetworkNotification";
-import { Web3Provider } from "./providers";
+import Navbar from "@components/ui/Navbar";
+import WrongNetworkNotification from "@components/ui/WrongNetworkNotification";
+import { Web3Provider } from "../providers";
 
 type LayoutProps = {
   pageName: string;

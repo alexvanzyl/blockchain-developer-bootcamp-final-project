@@ -1,5 +1,5 @@
-import Notification from "@components/Notification";
-import { useNetwork } from "./web3/hooks";
+import Notification from "@components/ui/Notification";
+import { useNetwork } from "../web3/hooks";
 
 const WrongNetworkNotification = (): JSX.Element => {
   const { network } = useNetwork();
