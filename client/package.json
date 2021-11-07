@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.4.1",
     "@heroicons/react": "^1.0.4",
     "@tailwindcss/aspect-ratio": "^0.2.1",
+    "@tailwindcss/forms": "^0.3.4",
     "ethers": "^5.4.7",
     "next": "11.1.2",
     "react": "17.0.2",

@@ -1,5 +1,6 @@
 import EthereumIcon from "@components/icons/EthereumIcon";
 import { CalendarIcon, UserIcon } from "@heroicons/react/outline";
+import { ethers } from "ethers";
 import Image from "next/image";
 import { Campaign } from "./campaign";
 
@@ -23,7 +24,7 @@ const CampaignCard = ({ campaign }: Props): JSX.Element => {
         <h3 className="text-xl font-bold leading-tight text-gray-900">
           {campaign.name}
         </h3>
-        <div className="flex items-center">
+        <div className="flex items-center" title="Total backers">
           <span className="text-xl mr-1">&#127793;</span>
           <span className="text-gray-700 text-lg">{campaign.backers}</span>
         </div>
@@ -73,8 +74,8 @@ const CampaignCard = ({ campaign }: Props): JSX.Element => {
             <div className="flex items-center">
               <EthereumIcon className="h-6 w-6 text-green-500 mr-2" />
               <span className="truncate">
-                &Xi; {campaign.totalFundingReceived} / &Xi;{" "}
-                {campaign.fundingGoal}
+                {ethers.constants.EtherSymbol} {campaign.totalFundingReceived} /{" "}
+                {ethers.constants.EtherSymbol} {campaign.fundingGoal}
               </span>
             </div>
           </li>
