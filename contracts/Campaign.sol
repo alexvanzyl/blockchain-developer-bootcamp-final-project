@@ -45,7 +45,25 @@ contract Campaign {
         // mark request as complete
     }
 
-    function getDetails() public view {
-        // return campaign details
+    function getDetails()
+        public
+        view
+        returns (
+            string memory,
+            string memory,
+            uint256,
+            uint256,
+            uint256,
+            address
+        )
+    {
+        return (
+            title,
+            description,
+            fundingGoal,
+            minimumContribution,
+            address(this).balance,
+            owner
+        );
     }
 }

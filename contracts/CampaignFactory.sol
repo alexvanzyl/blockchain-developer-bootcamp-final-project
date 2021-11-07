@@ -6,13 +6,23 @@ import "./Campaign.sol";
 contract CampaignFactory {
     address[] public campaigns;
 
-    function createCampaign(uint256 _fundingGoal, uint256 _minimumContribution)
-        public
-    {
-        // Create new campaign
+    function createCampaign(
+        string memory _title,
+        string memory _description,
+        uint256 _fundingGoal,
+        uint256 _minimumContribution
+    ) public {
+        Campaign newCampaign = new Campaign(
+            _title,
+            _description,
+            _fundingGoal,
+            _minimumContribution,
+            msg.sender
+        );
+        campaigns.push(address(newCampaign));
     }
 
     function getCampaigns() public view returns (address[] memory) {
-        // List all campaigns
+        return campaigns;
     }
 }
