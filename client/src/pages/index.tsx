@@ -1,4 +1,4 @@
-import { CampaignList } from "@components/ui/campaign";
+import { CampaignList } from "@components/campaign";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Head from "next/head";
 

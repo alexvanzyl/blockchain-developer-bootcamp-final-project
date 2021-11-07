@@ -1,3 +1,4 @@
+import CampaignFactory from "@contracts/CampaignFactory.json";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers } from "ethers";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -14,7 +15,7 @@ type Props = {
 interface CreateWeb3State {
   provider: any | null;
   web3: ethers.providers.Web3Provider | null;
-  contract: null;
+  contract: ethers.Contract | null;
   isLoading: boolean;
 }
 
@@ -38,7 +39,7 @@ const createWeb3State = ({
     provider,
     contract,
     isLoading,
-    hooks: setupHooks(web3),
+    hooks: setupHooks({ web3, contract }),
   };
 };
 
@@ -60,12 +61,16 @@ export default function Web3Provider({ children }: Props): JSX.Element {
         (await detectEthereumProvider()) as ExternalProviderExtended;
       if (provider) {
         const web3 = new ethers.providers.Web3Provider(provider);
+        const contract = new ethers.Contract(
+          CampaignFactory.networks[process.env.NEXT_PUBLIC_NETWORK_ID].address,
+          CampaignFactory.abi
+        );
         setWeb3Api({
           provider,
           web3,
-          contract: null,
+          contract,
           isLoading: false,
-          hooks: setupHooks(web3),
+          hooks: setupHooks({ web3, contract }),
         });
       } else {
         setWeb3Api((api) => ({ ...api, isLoading: false }));

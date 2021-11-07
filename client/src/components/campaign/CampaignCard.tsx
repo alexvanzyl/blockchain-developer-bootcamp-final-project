@@ -1,4 +1,4 @@
-import EthereumIcon from "@components/ui/EthereumIcon";
+import EthereumIcon from "@components/icons/EthereumIcon";
 import { CalendarIcon, UserIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import { Campaign } from "./campaign";

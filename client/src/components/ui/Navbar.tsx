@@ -1,7 +1,7 @@
 import Button from "@components/ui/Button";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import Logo from "./Logo";
+import Logo from "@components/icons/Logo";
 import NavbarMobile from "./NavbarMobile";
 import { useWeb3 } from "../providers";
 import { useAccount, useNetwork } from "../web3/hooks";
