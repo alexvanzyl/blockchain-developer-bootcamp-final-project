@@ -1,7 +1,11 @@
+import { useWeb3 } from "@components/providers";
 import Button from "@components/ui/Button";
 import { ethers } from "ethers";
 import type { InferGetStaticPropsType, NextPage } from "next";
+import { route } from "next/dist/server/router";
 import Head from "next/head";
+import router from "next/router";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { classNames } from "../../utils";
 
 export async function getStaticProps() {
@@ -9,10 +13,39 @@ export async function getStaticProps() {
     props: { pageName: "" }, // will be passed to the page component as props
   };
 }
+
+type FormData = {
+  title: string;
+  description: string;
+  fundingGoal: number;
+  minimumContribution: string;
+};
+
 const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
   () => {
-    const error = true;
-    const onSubmit = () => alert("SUBMIT");
+    const { web3, contract } = useWeb3();
+    const {
+      register,
+      handleSubmit,
+      reset,
+      formState: { errors },
+    } = useForm<FormData>();
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+      if (web3 && contract) {
+        const { title, description, fundingGoal, minimumContribution } = data;
+        const factory = contract.connect(web3.getSigner());
+        const txn = await factory.createCampaign(
+          title,
+          description,
+          ethers.utils.parseUnits(fundingGoal.toString(), "ether"),
+          ethers.utils.parseUnits(minimumContribution.toString(), "ether")
+        );
+        await txn.wait();
+        reset();
+        let campaigns = await factory.getCampaigns();
+        router.push(`/campaigns/${campaigns.slice(-1)[0]}/view`);
+      }
+    };
 
     return (
       <>
@@ -36,28 +69,29 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
 
                 <div>
                   <label
-                    htmlFor="project-name"
+                    htmlFor="title"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Title
                   </label>
                   <div className="mt-1">
                     <input
+                      id="title"
                       type="text"
-                      name="project-name"
-                      id="project-name"
                       className={classNames(
-                        error
+                        errors.title
                           ? "focus:ring-red-500 focus:border-red-500 border-red-300"
                           : "focus:ring-green-500 focus:border-green-500 border-gray-300",
                         "block w-full shadow-sm  sm:text-sm rounded-md"
                       )}
-                      defaultValue=""
+                      {...register("title", { required: true })}
                     />
                   </div>
-                  <p className="mt-2 text-sm text-red-600" id="email-error">
-                    Campaign needs a title to be noticed.
-                  </p>
+                  {errors.title && (
+                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                      Campaign needs a title to be noticed.
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -70,17 +104,27 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                   <div className="mt-1">
                     <textarea
                       id="description"
-                      name="description"
                       rows={3}
-                      className="block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border border-gray-300 rounded-md"
-                      defaultValue={""}
+                      className={classNames(
+                        errors.description
+                          ? "focus:ring-red-500 focus:border-red-500 border-red-300"
+                          : "focus:ring-green-500 focus:border-green-500 border-gray-300",
+                        "block w-full shadow-sm  sm:text-sm rounded-md"
+                      )}
+                      // className="block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border border-gray-300 rounded-md"
+                      {...register("description", { required: true })}
                     />
                   </div>
+                  {errors.description && (
+                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                      Give your campaign a description the will entice backers.
+                    </p>
+                  )}
                 </div>
 
                 <div>
                   <label
-                    htmlFor="project-name"
+                    htmlFor="funding-goal"
                     className="block text-sm font-medium text-gray-700"
                   >
                     What is your funding goal?
@@ -90,11 +134,15 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                       {ethers.constants.EtherSymbol}
                     </div>
                     <input
-                      type="text"
-                      name="project-name"
-                      id="project-name"
-                      className="pl-7 block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border-gray-300 rounded-md"
-                      defaultValue=""
+                      type="number"
+                      id="funding-goal"
+                      className={classNames(
+                        errors.description
+                          ? "focus:ring-red-500 focus:border-red-500 border-red-300"
+                          : "focus:ring-green-500 focus:border-green-500 border-gray-300",
+                        "pl-7 block w-full shadow-sm  sm:text-sm rounded-md"
+                      )}
+                      {...register("fundingGoal", { required: true, min: 1 })}
                     />
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                       <span
@@ -105,10 +153,15 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                       </span>
                     </div>
                   </div>
+                  {errors.fundingGoal && (
+                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                      Please specify the amount of funding you looking for.
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
-                    htmlFor="project-name"
+                    htmlFor="minimum-contribution"
                     className="block text-sm font-medium text-gray-700"
                   >
                     What is the minimum a backer can contribute?
@@ -119,10 +172,17 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                     </div>
                     <input
                       type="text"
-                      name="project-name"
-                      id="project-name"
-                      className="pl-7 block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border-gray-300 rounded-md"
-                      defaultValue=""
+                      id="minimum-contribution"
+                      className={classNames(
+                        errors.description
+                          ? "focus:ring-red-500 focus:border-red-500 border-red-300"
+                          : "focus:ring-green-500 focus:border-green-500 border-gray-300",
+                        "pl-7 block w-full shadow-sm  sm:text-sm rounded-md"
+                      )}
+                      {...register("minimumContribution", {
+                        required: true,
+                        min: 1,
+                      })}
                     />
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                       <span
@@ -133,12 +193,17 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                       </span>
                     </div>
                   </div>
+                  {errors.minimumContribution && (
+                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                      Please specify the minimum amount a backer can contribute.
+                    </p>
+                  )}
                 </div>
               </div>
             </form>
           </div>
           <div className="flex justify-end bg-gray-50 px-4 py-4 sm:px-6">
-            <Button type="submit" onClick={onSubmit}>
+            <Button type="submit" onClick={handleSubmit(onSubmit)}>
               <span>Create</span>
             </Button>
           </div>

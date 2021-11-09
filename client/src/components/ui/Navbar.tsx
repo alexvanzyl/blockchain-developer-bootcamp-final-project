@@ -62,7 +62,7 @@ const Navbar = (): JSX.Element => {
                       <Button
                         type="button"
                         variant="green"
-                        onClick={() => router.push("/campaign/create")}
+                        onClick={() => router.push("/campaigns/create")}
                       >
                         <span>New campaign</span>
                       </Button>
