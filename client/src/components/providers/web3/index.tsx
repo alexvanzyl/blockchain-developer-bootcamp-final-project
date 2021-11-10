@@ -15,7 +15,7 @@ type Props = {
 interface CreateWeb3State {
   provider: any | null;
   web3: ethers.providers.Web3Provider | null;
-  contract: ethers.Contract | null;
+  contractFactory: ethers.Contract | null;
   isLoading: boolean;
 }
 
@@ -31,15 +31,15 @@ interface Web3Context extends Web3State {
 const createWeb3State = ({
   web3,
   provider,
-  contract,
+  contractFactory,
   isLoading,
 }: CreateWeb3State): Web3State => {
   return {
     web3,
     provider,
-    contract,
+    contractFactory,
     isLoading,
-    hooks: setupHooks({ web3, contract }),
+    hooks: setupHooks({ web3, contractFactory }),
   };
 };
 
@@ -50,7 +50,7 @@ export default function Web3Provider({ children }: Props): JSX.Element {
     createWeb3State({
       provider: null,
       web3: null,
-      contract: null,
+      contractFactory: null,
       isLoading: true,
     })
   );
@@ -61,16 +61,16 @@ export default function Web3Provider({ children }: Props): JSX.Element {
         (await detectEthereumProvider()) as ExternalProviderExtended;
       if (provider) {
         const web3 = new ethers.providers.Web3Provider(provider);
-        const contract = new ethers.Contract(
+        const contractFactory = new ethers.Contract(
           CampaignFactory.networks[process.env.NEXT_PUBLIC_NETWORK_ID].address,
           CampaignFactory.abi
         );
         setWeb3Api({
           provider,
           web3,
-          contract,
+          contractFactory,
           isLoading: false,
-          hooks: setupHooks({ web3, contract }),
+          hooks: setupHooks({ web3, contractFactory }),
         });
       } else {
         setWeb3Api((api) => ({ ...api, isLoading: false }));

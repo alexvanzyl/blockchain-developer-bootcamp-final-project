@@ -23,7 +23,7 @@ type FormData = {
 
 const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
   () => {
-    const { web3, contract } = useWeb3();
+    const { web3, contractFactory } = useWeb3();
     const {
       register,
       handleSubmit,
@@ -31,9 +31,9 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
       formState: { errors },
     } = useForm<FormData>();
     const onSubmit: SubmitHandler<FormData> = async (data) => {
-      if (web3 && contract) {
+      if (web3 && contractFactory) {
         const { title, description, fundingGoal, minimumContribution } = data;
-        const factory = contract.connect(web3.getSigner());
+        const factory = contractFactory.connect(web3.getSigner());
         const txn = await factory.createCampaign(
           title,
           description,

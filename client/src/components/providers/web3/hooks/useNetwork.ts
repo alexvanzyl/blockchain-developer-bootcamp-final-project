@@ -23,7 +23,7 @@ const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID];
 export const handler =
   (web3: ethers.providers.Web3Provider | null) => (): NetworkResponse => {
     const { data, error, mutate, ...rest } = useSWR(
-      () => (web3 ? "webs/network" : null),
+      () => (web3 ? "web3/network" : null),
       async () => {
         const network = await web3?.getNetwork();
         if (network) return NETWORKS[network.chainId];

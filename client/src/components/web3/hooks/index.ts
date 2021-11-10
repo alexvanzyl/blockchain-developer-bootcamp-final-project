@@ -1,5 +1,6 @@
 import { useHooks } from "@components/providers/web3";
 import { AccountResponse } from "@components/providers/web3/hooks/useAccount";
+import { CampaignsResponse } from "@components/providers/web3/hooks/useCampaigns";
 import { NetworkResponse } from "@components/providers/web3/hooks/useNetwork";
 import { SWRResponse } from "swr";
 
@@ -13,6 +14,10 @@ type UseAccount = {
 
 type UseNetwork = {
   network: ExtendedResponse<NetworkResponse>;
+};
+
+type UseCampaigns = {
+  campaigns: ExtendedResponse<CampaignsResponse>;
 };
 
 const enhanceHook = <T extends SWRResponse<any, unknown>>(
@@ -36,4 +41,11 @@ export const useNetwork = (): UseNetwork => {
     useHooks((hooks) => hooks.useNetwork)()
   );
   return { network: swrResponse };
+};
+
+export const useCampaigns = (): UseCampaigns => {
+  const swrResponse = enhanceHook<CampaignsResponse>(
+    useHooks((hooks) => hooks.useCampaigns)()
+  );
+  return { campaigns: swrResponse };
 };

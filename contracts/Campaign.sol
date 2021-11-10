@@ -54,6 +54,7 @@ contract Campaign {
             uint256,
             uint256,
             uint256,
+            address,
             address
         )
     {
@@ -63,6 +64,7 @@ contract Campaign {
             fundingGoal,
             minimumContribution,
             address(this).balance,
+            address(this),
             owner
         );
     }
