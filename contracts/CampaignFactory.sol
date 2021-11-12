@@ -10,13 +10,15 @@ contract CampaignFactory {
         string memory _title,
         string memory _description,
         uint256 _fundingGoal,
-        uint256 _minimumContribution
+        uint256 _minimumContribution,
+        string memory _imageUrl
     ) public {
         Campaign newCampaign = new Campaign(
             _title,
             _description,
             _fundingGoal,
             _minimumContribution,
+            _imageUrl,
             msg.sender
         );
         campaigns.push(address(newCampaign));

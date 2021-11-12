@@ -7,7 +7,7 @@ export interface Campaign {
   minimumContribution: number;
   totalFundingReceived: number;
   address: string;
-  imageUrl: string;
+  imageURL: string;
   timestamp: number;
   backers: number;
 }

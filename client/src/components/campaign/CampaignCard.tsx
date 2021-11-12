@@ -22,7 +22,7 @@ const CampaignCard = ({ campaign }: Props): JSX.Element => {
     >
       <div className="flex justify-between px-4 py-5 sm:px-6">
         <h3 className="text-xl font-bold leading-tight text-gray-900">
-          {campaign.name}
+          {campaign.title}
         </h3>
         <div className="flex items-center" title="Total backers">
           <span className="text-xl mr-1">&#127793;</span>
@@ -34,7 +34,7 @@ const CampaignCard = ({ campaign }: Props): JSX.Element => {
         width="100%"
         height="50%"
         objectFit="cover"
-        src={campaign.imageUrl}
+        src={campaign.imageURL}
         alt={campaign.description}
       />
       <div className="bg-gray-200 h-6">

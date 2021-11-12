@@ -38,11 +38,12 @@ export const handler =
                 minimumContribution: parseInt(
                   ethers.utils.formatUnits(details[3], "ether")
                 ),
+                imageURL: details[4],
                 totalFundingReceived: parseInt(
-                  ethers.utils.formatUnits(details[4], "ether")
+                  ethers.utils.formatUnits(details[5], "ether")
                 ),
-                address: details[5],
-                owner: details[6],
+                address: details[6],
+                owner: details[7],
                 imageUrl:
                   "https://globscoop.com/wp-content/uploads/2020/05/19654_tn_int-hyperloop-concept-priestmangoode.jpg",
                 timestamp: Date.now(),

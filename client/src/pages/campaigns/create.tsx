@@ -1,12 +1,18 @@
 import { useWeb3 } from "@components/providers";
 import Button from "@components/ui/Button";
 import { ethers } from "ethers";
+import { create } from "ipfs-http-client";
 import type { InferGetStaticPropsType, NextPage } from "next";
-import { route } from "next/dist/server/router";
 import Head from "next/head";
+import Image from "next/image";
 import router from "next/router";
+import { ChangeEvent, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { classNames } from "../../utils";
+
+const client = create({
+  url: "https://ipfs.infura.io:5001/api/v0",
+});
 
 export async function getStaticProps() {
   return {
@@ -30,15 +36,33 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
       reset,
       formState: { errors },
     } = useForm<FormData>();
+    const [fileUrl, setFileUrl] = useState("");
+
+    async function onChange(e: ChangeEvent<HTMLInputElement>) {
+      const file = e.target.files ? e.target.files[0] : null;
+      if (file) {
+        try {
+          const added = await client.add(file, {
+            progress: (prog) => console.log(`received: ${prog}`),
+          });
+          const url = `https://infura-ipfs.io/ipfs/${added.path}`;
+          setFileUrl(url);
+        } catch (error) {
+          console.log("Error uploading file: ", error);
+        }
+      }
+    }
+
     const onSubmit: SubmitHandler<FormData> = async (data) => {
-      if (web3 && contractFactory) {
+      if (web3 && contractFactory && fileUrl) {
         const { title, description, fundingGoal, minimumContribution } = data;
         const factory = contractFactory.connect(web3.getSigner());
         const txn = await factory.createCampaign(
           title,
           description,
           ethers.utils.parseUnits(fundingGoal.toString(), "ether"),
-          ethers.utils.parseUnits(minimumContribution.toString(), "ether")
+          ethers.utils.parseUnits(minimumContribution.toString(), "ether"),
+          fileUrl
         );
         await txn.wait();
         reset();
@@ -96,6 +120,33 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
 
                 <div>
                   <label
+                    htmlFor="campaign-image"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Campaign Image
+                  </label>
+                  <div className="mt-1 mb-1">
+                    <input
+                      id="campaign-image"
+                      type="file"
+                      className=""
+                      onChange={onChange}
+                    />
+                  </div>
+                  {fileUrl && (
+                    <Image
+                      layout="responsive"
+                      className="rounded"
+                      width={100}
+                      height={100}
+                      src={fileUrl}
+                      alt="Image"
+                    />
+                  )}
+                </div>
+
+                <div>
+                  <label
                     htmlFor="description"
                     className="block text-sm font-medium text-gray-700"
                   >
@@ -111,7 +162,6 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                           : "focus:ring-green-500 focus:border-green-500 border-gray-300",
                         "block w-full shadow-sm  sm:text-sm rounded-md"
                       )}
-                      // className="block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm border border-gray-300 rounded-md"
                       {...register("description", { required: true })}
                     />
                   </div>

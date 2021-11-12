@@ -7,6 +7,7 @@ contract Campaign {
     uint256 public fundingGoal;
     uint256 public totalFundingRecieved;
     uint256 public minimumContribution;
+    string public imageURL;
     address public owner;
 
     constructor(
@@ -14,12 +15,14 @@ contract Campaign {
         string memory _description,
         uint256 _fundingGoal,
         uint256 _minimumContribution,
+        string memory _imageURL,
         address _owner
     ) {
         title = _title;
         description = _description;
         fundingGoal = _fundingGoal;
         minimumContribution = _minimumContribution;
+        imageURL = _imageURL;
         owner = _owner;
     }
 
@@ -53,6 +56,7 @@ contract Campaign {
             string memory,
             uint256,
             uint256,
+            string memory,
             uint256,
             address,
             address
@@ -63,6 +67,7 @@ contract Campaign {
             description,
             fundingGoal,
             minimumContribution,
+            imageURL,
             address(this).balance,
             address(this),
             owner

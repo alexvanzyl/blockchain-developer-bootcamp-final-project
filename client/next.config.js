@@ -2,11 +2,6 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: [
-      "tailwindui.com",
-      "autoconception.com",
-      "globscoop.com",
-      "images.hgmsites.net",
-    ],
+    domains: ["tailwindui.com", "ipfs.infura.io", "infura-ipfs.io"],
   },
 };
