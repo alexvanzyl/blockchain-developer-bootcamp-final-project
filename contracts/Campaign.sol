@@ -9,6 +9,9 @@ contract Campaign {
     uint256 public minimumContribution;
     string public imageURL;
     address public owner;
+    mapping(address => bool) public backers;
+    uint256 public backersCount;
+    uint256 public timestamp;
 
     constructor(
         string memory _title,
@@ -24,6 +27,7 @@ contract Campaign {
         minimumContribution = _minimumContribution;
         imageURL = _imageURL;
         owner = _owner;
+        timestamp = block.timestamp;
     }
 
     function fund(uint256 _amount) public payable {
@@ -56,10 +60,12 @@ contract Campaign {
             string memory,
             uint256,
             uint256,
+            uint256,
             string memory,
             uint256,
             address,
-            address
+            address,
+            uint256
         )
     {
         return (
@@ -67,10 +73,12 @@ contract Campaign {
             description,
             fundingGoal,
             minimumContribution,
+            backersCount,
             imageURL,
             address(this).balance,
             address(this),
-            owner
+            owner,
+            timestamp
         );
     }
 }

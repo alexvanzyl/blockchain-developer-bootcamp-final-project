@@ -29,7 +29,6 @@ export const handler =
               );
               const details = await campaignContract.getDetails();
               return {
-                id: index + 1,
                 title: details[0],
                 description: details[1],
                 fundingGoal: parseInt(
@@ -38,16 +37,14 @@ export const handler =
                 minimumContribution: parseInt(
                   ethers.utils.formatUnits(details[3], "ether")
                 ),
-                imageURL: details[4],
+                backers: parseInt(details[4]),
+                imageURL: details[5],
                 totalFundingReceived: parseInt(
-                  ethers.utils.formatUnits(details[5], "ether")
+                  ethers.utils.formatUnits(details[6], "ether")
                 ),
-                address: details[6],
-                owner: details[7],
-                imageUrl:
-                  "https://globscoop.com/wp-content/uploads/2020/05/19654_tn_int-hyperloop-concept-priestmangoode.jpg",
-                timestamp: Date.now(),
-                backers: 10,
+                address: details[7],
+                owner: details[8],
+                timestamp: new Date(details[9] * 1000),
               };
             }
           );
