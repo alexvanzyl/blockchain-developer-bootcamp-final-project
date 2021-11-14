@@ -4,15 +4,14 @@ import { Campaign } from "./campaign";
 
 const CampaignList = (): JSX.Element => {
   const { campaigns } = useCampaigns();
-  console.log(campaigns.data);
 
   const listCampaigns = (): JSX.Element[] | JSX.Element => {
     if (campaigns.data && campaigns.data.length > 0) {
       return campaigns.data.map((campaign: Campaign) => (
-        <CampaignCard key={campaign.id} campaign={campaign} />
+        <CampaignCard key={campaign.address} campaign={campaign} />
       ));
     }
-    return <div>No content</div>;
+    return <div>Loading...</div>;
   };
 
   return (
