@@ -1,5 +1,4 @@
 export interface Campaign {
-  id: number;
   title: string;
   description: string;
   owner: string;
@@ -8,6 +7,6 @@ export interface Campaign {
   totalFundingReceived: number;
   address: string;
   imageURL: string;
-  timestamp: number;
+  timestamp: Date;
   backers: number;
 }

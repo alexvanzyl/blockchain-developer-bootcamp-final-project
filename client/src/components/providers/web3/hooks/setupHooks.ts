@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { AccountResponse, handler as createUseAccount } from "./useAccount";
+import { CampaignResponse, handler as createUseCampaign } from "./useCampaign";
 import {
   CampaignsResponse,
   handler as createUseCampaigns,
@@ -10,6 +11,7 @@ export type Web3Hooks = {
   useAccount: () => AccountResponse;
   useNetwork: () => NetworkResponse;
   useCampaigns: () => CampaignsResponse;
+  useCampaign: (address: string | undefined) => CampaignResponse;
 };
 
 type SetupHooksProps = {
@@ -25,5 +27,6 @@ export const setupHooks = ({
     useAccount: createUseAccount(web3),
     useNetwork: createUseNetwork(web3),
     useCampaigns: createUseCampaigns({ web3, contractFactory }),
+    useCampaign: createUseCampaign(web3),
   };
 };
