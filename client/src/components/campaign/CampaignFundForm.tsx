@@ -1,22 +1,50 @@
+import { useWeb3 } from "@components/providers";
 import Button from "@components/ui/Button";
+import { useCampaign } from "@components/web3/hooks";
+import CampaignContract from "@contracts/Campaign.json";
 import { ethers } from "ethers";
-import { useForm } from "react-hook-form";
-import { classNames } from "src/utils";
-import { Campaign } from "./campaign";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { classNames, parseCampaignDetails } from "src/utils";
 
 type Props = {
-  campaign: Campaign;
+  address: string;
 };
 
-const CampaignFundForm = ({ campaign }: Props): JSX.Element => {
+type FormData = {
+  contribution: number;
+};
+
+const CampaignFundForm = ({ address }: Props): JSX.Element => {
+  const { web3 } = useWeb3();
+  const { campaign } = useCampaign(address);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<{ contribution: number }>();
+  } = useForm<FormData>();
 
-  const onSubmit = () => alert("submit");
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    if (web3 && campaign.data) {
+      const { contribution } = data;
+
+      const campaignContract = new ethers.Contract(
+        campaign.data.address,
+        CampaignContract.abi,
+        web3.getSigner()
+      );
+
+      const overrides = {
+        value: ethers.utils.parseUnits(contribution.toString(), "ether"),
+      };
+      const txn = await campaignContract.fund(overrides);
+      await txn.wait();
+      reset();
+
+      const details = await campaignContract.getDetails();
+      campaign.mutate(parseCampaignDetails(details));
+    }
+  };
 
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -43,10 +71,10 @@ const CampaignFundForm = ({ campaign }: Props): JSX.Element => {
                       : "focus:ring-green-500 focus:border-green-500 border-gray-300",
                     "pl-7 block w-full shadow-sm  sm:text-sm rounded-md"
                   )}
-                  defaultValue={campaign.minimumContribution}
+                  defaultValue={campaign.data?.minimumContribution}
                   {...register("contribution", {
                     required: true,
-                    min: campaign.minimumContribution,
+                    min: campaign.data?.minimumContribution,
                   })}
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -64,7 +92,7 @@ const CampaignFundForm = ({ campaign }: Props): JSX.Element => {
                   id="contribution-error"
                 >
                   Contribution needs to be {ethers.constants.EtherSymbol}{" "}
-                  {campaign.minimumContribution} or more.
+                  {campaign.data?.minimumContribution} or more.
                 </p>
               )}
             </div>

@@ -30,8 +30,12 @@ contract Campaign {
         timestamp = block.timestamp;
     }
 
-    function fund(uint256 _amount) public payable {
-        // Fund the campaign should be equal to or more than min. contribution
+    function fund() public payable {
+        require(msg.value >= minimumContribution);
+
+        backers[msg.sender] = true;
+        backersCount += 1;
+        totalFundingRecieved += msg.value;
     }
 
     function createExpenditureRequest(
@@ -75,7 +79,7 @@ contract Campaign {
             minimumContribution,
             backersCount,
             imageURL,
-            address(this).balance,
+            totalFundingRecieved,
             address(this),
             owner,
             timestamp

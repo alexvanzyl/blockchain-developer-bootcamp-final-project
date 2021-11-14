@@ -58,7 +58,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <meta name="description" content="Campaigns done better." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <CampaignList campaigns={campaigns} />
+      <CampaignList />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import CampaignDetails from "@components/campaign/CampaignDetails";
 import CampaignFundForm from "@components/campaign/CampaignFundForm";
 import CampaignStats from "@components/campaign/CampaignStats";
+import Button from "@components/ui/Button";
 import { useCampaign } from "@components/web3/hooks";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -36,7 +37,10 @@ const ViewCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                   <CampaignDetails campaign={campaign.data} />
                 </div>
                 <div>
-                  <CampaignFundForm campaign={campaign.data} />
+                  <CampaignFundForm address={campaign.data.address} />
+                </div>
+                <div>
+                  <Button type="button">Create Expenditure</Button>
                 </div>
               </div>
             </div>
