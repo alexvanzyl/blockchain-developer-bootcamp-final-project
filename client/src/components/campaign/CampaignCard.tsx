@@ -2,6 +2,7 @@ import EthereumIcon from "@components/icons/EthereumIcon";
 import { CalendarIcon, UserIcon } from "@heroicons/react/outline";
 import { ethers } from "ethers";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { Campaign } from "./campaign";
 
 type Props = {
@@ -14,12 +15,10 @@ const CampaignCard = ({ campaign }: Props): JSX.Element => {
     if (percentage >= 1) return "100%";
     return `${Math.round(percentage * 100)}%`;
   };
+  const router = useRouter();
 
   return (
-    <div
-      key={campaign.id}
-      className="bg-white overflow-hidden shadow rounded-lg hover:shadow-2xl"
-    >
+    <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-2xl">
       <div className="flex justify-between px-4 py-5 sm:px-6">
         <h3 className="text-xl font-bold leading-tight text-gray-900">
           {campaign.title}
@@ -85,6 +84,7 @@ const CampaignCard = ({ campaign }: Props): JSX.Element => {
         <button
           type="button"
           className="shadow-md w-full justify-center inline-flex items-center px-5 py-2 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          onClick={() => router.push(`/campaigns/${campaign.address}/details`)}
         >
           View
         </button>
