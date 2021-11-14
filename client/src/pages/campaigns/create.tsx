@@ -67,7 +67,7 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
         await txn.wait();
         reset();
         let campaigns = await factory.getCampaigns();
-        router.push(`/campaigns/${campaigns.slice(-1)[0]}/view`);
+        router.push(`/campaigns/${campaigns.slice(-1)[0]}/details`);
       }
     };
 
@@ -112,7 +112,7 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                     />
                   </div>
                   {errors.title && (
-                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                    <p className="mt-2 text-sm text-red-600" id="title-error">
                       Campaign needs a title to be noticed.
                     </p>
                   )}
@@ -137,8 +137,8 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                     <Image
                       layout="responsive"
                       className="rounded"
-                      width={100}
-                      height={100}
+                      width="100%"
+                      height="80%"
                       src={fileUrl}
                       alt="Image"
                     />
@@ -166,7 +166,10 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                     />
                   </div>
                   {errors.description && (
-                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                    <p
+                      className="mt-2 text-sm text-red-600"
+                      id="description-error"
+                    >
                       Give your campaign a description the will entice backers.
                     </p>
                   )}
@@ -204,7 +207,10 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                     </div>
                   </div>
                   {errors.fundingGoal && (
-                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                    <p
+                      className="mt-2 text-sm text-red-600"
+                      id="funding-goal-error"
+                    >
                       Please specify the amount of funding you looking for.
                     </p>
                   )}
@@ -244,7 +250,10 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                     </div>
                   </div>
                   {errors.minimumContribution && (
-                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                    <p
+                      className="mt-2 text-sm text-red-600"
+                      id="minimum-contribution-error"
+                    >
                       Please specify the minimum amount a backer can contribute.
                     </p>
                   )}
@@ -252,7 +261,7 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
               </div>
             </form>
           </div>
-          <div className="flex justify-end bg-gray-50 px-4 py-4 sm:px-6">
+          <div className="flex justify-end px-4 py-4 sm:px-6">
             <Button type="submit" onClick={handleSubmit(onSubmit)}>
               <span>Create</span>
             </Button>
