@@ -33,8 +33,10 @@ contract Campaign {
     function fund() public payable {
         require(msg.value >= minimumContribution);
 
+        if (backers[msg.sender] != true) {
+            backersCount += 1;
+        }
         backers[msg.sender] = true;
-        backersCount += 1;
         totalFundingRecieved += msg.value;
     }
 
