@@ -3,6 +3,7 @@ import Button from "@components/ui/Button";
 import { useCampaign } from "@components/web3/hooks";
 import CampaignContract from "@contracts/Campaign.json";
 import { ethers } from "ethers";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { classNames, parseCampaignDetails } from "src/utils";
 
@@ -23,9 +24,11 @@ const CampaignFundForm = ({ address }: Props): JSX.Element => {
     reset,
     formState: { errors },
   } = useForm<FormData>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (web3 && campaign.data) {
+      setIsLoading(true);
       const { contribution } = data;
 
       const campaignContract = new ethers.Contract(
@@ -34,15 +37,21 @@ const CampaignFundForm = ({ address }: Props): JSX.Element => {
         web3.getSigner()
       );
 
-      const overrides = {
-        value: ethers.utils.parseUnits(contribution.toString(), "ether"),
-      };
-      const txn = await campaignContract.fund(overrides);
-      await txn.wait();
-      reset();
+      try {
+        const overrides = {
+          value: ethers.utils.parseUnits(contribution.toString(), "ether"),
+        };
+        const txn = await campaignContract.fund(overrides);
+        await txn.wait();
+        reset();
 
-      const details = await campaignContract.getDetails();
-      campaign.mutate(parseCampaignDetails(details));
+        const details = await campaignContract.getDetails();
+        campaign.mutate(parseCampaignDetails(details));
+        setIsLoading(false);
+      } catch (e) {
+        console.log(e);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -96,8 +105,12 @@ const CampaignFundForm = ({ address }: Props): JSX.Element => {
                 </p>
               )}
             </div>
-            <Button type="submit" className="w-full justify-center">
-              Fund campaign
+            <Button
+              type="submit"
+              className="w-full justify-center"
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : "Fund campaign"}
             </Button>
           </div>
         </form>
