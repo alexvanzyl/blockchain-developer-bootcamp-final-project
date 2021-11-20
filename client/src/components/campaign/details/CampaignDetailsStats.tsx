@@ -1,11 +1,11 @@
+import { Campaign } from "@components/campaign/models";
 import { ethers } from "ethers";
-import { Campaign } from "./campaign";
 
 type Props = {
   campaign: Campaign;
 };
 
-const CampaignStats = ({ campaign }: Props): JSX.Element => {
+const CampaignDetailsStats = ({ campaign }: Props): JSX.Element => {
   const getCampaignProgress = (campaign: Campaign): string => {
     const percentage = campaign.totalFundingReceived / campaign.fundingGoal;
     if (percentage >= 1) return "100%";
@@ -42,4 +42,4 @@ const CampaignStats = ({ campaign }: Props): JSX.Element => {
   );
 };
 
-export default CampaignStats;
+export default CampaignDetailsStats;

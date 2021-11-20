@@ -1,6 +1,6 @@
+import { Campaign } from "@components/campaign/models";
 import { ethers } from "ethers";
 import Image from "next/image";
-import { Campaign } from "./campaign";
 
 type Props = {
   campaign: Campaign;

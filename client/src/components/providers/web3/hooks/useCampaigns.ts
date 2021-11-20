@@ -1,4 +1,4 @@
-import { Campaign } from "@components/campaign/campaign";
+import { Campaign } from "@components/campaign/models";
 import CampaignContract from "@contracts/Campaign.json";
 import { ethers } from "ethers";
 import useSWR, { SWRResponse } from "swr";

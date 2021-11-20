@@ -1,4 +1,4 @@
-import { Campaign } from "@components/campaign/campaign";
+import { Campaign } from "@components/campaign/models";
 import { ethers } from "ethers";
 
 export function classNames(...classes: Array<string>) {

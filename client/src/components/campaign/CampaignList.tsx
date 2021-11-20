@@ -1,6 +1,6 @@
+import { CampaignCard } from "@components/campaign";
+import { Campaign } from "@components/campaign/models";
 import { useCampaigns } from "@components/web3/hooks";
-import { CampaignCard } from ".";
-import { Campaign } from "./campaign";
 
 const CampaignList = (): JSX.Element => {
   const { campaigns } = useCampaigns();

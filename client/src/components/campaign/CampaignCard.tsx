@@ -1,9 +1,9 @@
+import { Campaign } from "@components/campaign/models";
 import EthereumIcon from "@components/icons/EthereumIcon";
 import { CalendarIcon, UserIcon } from "@heroicons/react/outline";
 import { ethers } from "ethers";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Campaign } from "./campaign";
 
 type Props = {
   campaign: Campaign;
