@@ -1,2 +1,5 @@
 #!/bin/bash
-rm -r build && npx truffle migrate && cp build/contracts/Campaign* client/src/contracts
+if [ -d "build" ]; then 
+    rm -r build 
+fi
+npx truffle migrate && cp build/contracts/Campaign* client/src/contracts
