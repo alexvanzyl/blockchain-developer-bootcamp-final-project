@@ -7,7 +7,7 @@ const navigation = [
     href: "expenditures",
     icon: ChartSquareBarIcon,
     current: false,
-    count: "5",
+    count: null,
   },
 ];
 

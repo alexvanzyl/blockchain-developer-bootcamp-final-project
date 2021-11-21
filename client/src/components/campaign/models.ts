@@ -13,8 +13,8 @@ export interface Campaign {
 
 export interface ExpenditureRequest {
   description: string;
-  value: number;
+  amount: number;
   recipient: string;
-  completed: boolean;
+  complete: boolean;
   approvalCount: number;
 }

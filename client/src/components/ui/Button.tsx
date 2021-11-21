@@ -1,3 +1,5 @@
+import { classNames } from "src/utils";
+
 type Props = {
   children: React.ReactNode;
   type: "button" | "submit";
@@ -32,7 +34,13 @@ const Button = ({
   return (
     <button
       {...rest}
-      className={`${className} ${variants[variant]} ${sizes[size]} relative inline-flex items-center border border-transparent font-medium rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2`}
+      className={classNames(
+        `${className}`,
+        variants[variant],
+        sizes[size],
+        rest.disabled ? "opacity-60 cursor-not-allowed" : "",
+        "relative inline-flex items-center border border-transparent font-medium rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+      )}
     >
       <span>{children}</span>
     </button>

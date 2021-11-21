@@ -1,5 +1,5 @@
 import { CampaignExpenditureRequestsTableRow } from "@components/campaign/expenditures";
-import { useExpenditureRequests } from "@components/web3/hooks";
+import { useCampaign, useExpenditureRequests } from "@components/web3/hooks";
 import { useRouter } from "next/router";
 
 const CampaignExpenditureRequestsTable = (): JSX.Element => {
@@ -7,6 +7,7 @@ const CampaignExpenditureRequestsTable = (): JSX.Element => {
   const { cid } = router.query;
   const address = typeof cid == "string" ? cid : undefined;
   const { expenditureRequests } = useExpenditureRequests(address);
+  const { campaign } = useCampaign(address);
 
   const renderRows = (): JSX.Element | JSX.Element[] => {
     if (
@@ -14,13 +15,12 @@ const CampaignExpenditureRequestsTable = (): JSX.Element => {
       expenditureRequests.data &&
       expenditureRequests.data.length > 0
     ) {
-      const totalExpenditureRequests = expenditureRequests.data.length;
       return expenditureRequests.data.map((expenditure, expenditureIdx) => (
         <CampaignExpenditureRequestsTableRow
           key={expenditureIdx}
           index={expenditureIdx}
           expenditure={expenditure}
-          totalExpenditures={totalExpenditureRequests}
+          totalBackers={campaign.data ? campaign.data.backers : 0}
         />
       ));
     }

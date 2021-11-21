@@ -32,7 +32,6 @@ const ViewCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
     const { cid } = router.query;
     const address = typeof cid == "string" ? cid : undefined;
     const { campaign } = useCampaign(address);
-    const { account } = useAccount();
 
     return (
       <>
@@ -51,9 +50,7 @@ const ViewCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
                 </div>
                 <div>
                   <CampaignFundForm address={campaign.data.address} />
-                  {campaign.data.owner === account.data && (
-                    <CampaignDetailsSidebar />
-                  )}
+                  <CampaignDetailsSidebar />
                 </div>
                 <div></div>
               </div>

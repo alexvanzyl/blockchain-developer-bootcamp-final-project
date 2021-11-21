@@ -21,11 +21,21 @@ export const handler =
 
         const expenditureRequestsCount =
           await campaignContract.expenditureRequestsCount();
+        console.log(parseInt(expenditureRequestsCount));
         const requests: ExpenditureRequest[] = await Promise.all(
           Array(parseInt(expenditureRequestsCount))
             .fill({})
-            .map((_, index) => {
-              return campaignContract.expenditureRequests[index];
+            .map(async (_, index) => {
+              const request = await campaignContract.expenditureRequests(
+                index + 1
+              );
+              return {
+                ...request,
+                approvalCount: parseInt(request.approvalCount),
+                amount: parseInt(
+                  ethers.utils.formatUnits(request.amount, "ether")
+                ),
+              };
             })
         );
 

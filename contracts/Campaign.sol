@@ -4,7 +4,7 @@ pragma solidity 0.8.7;
 contract Campaign {
     struct ExpenditureRequest {
         string description;
-        uint256 value;
+        uint256 amount;
         address recipient;
         bool complete;
         uint256 approvalCount;
@@ -58,25 +58,41 @@ contract Campaign {
 
     function createExpenditureRequest(
         string memory _description,
-        uint256 _value,
+        uint256 _amount,
         address _recipient
     ) public onlyOwner {
+        require(
+            address(this).balance >= _amount,
+            "Requesting more than available."
+        );
+        require(_recipient != owner, "Recipient cannot be the owner");
         ExpenditureRequest storage r = expenditureRequests[
             expenditureRequestsCount += 1
         ];
         r.description = _description;
-        r.value = _value;
+        r.amount = _amount;
         r.recipient = _recipient;
     }
 
     function approveExpenditureRequest(uint256 _index) public {
-        // Allows the backer to approve the expenditure
+        ExpenditureRequest storage request = expenditureRequests[_index];
+
+        require(backers[msg.sender]);
+        require(!request.approvals[msg.sender]);
+
+        request.approvals[msg.sender] = true;
+        request.approvalCount += 1;
     }
 
-    function finalizeExpenditureRequest(uint256 _index) public {
-        // check request has been approved by more than 50% of the backers
-        // transfer funds to the recipent
-        // mark request as complete
+    function finalizeExpenditureRequest(uint256 _index) public onlyOwner {
+        ExpenditureRequest storage request = expenditureRequests[_index];
+
+        require(!request.complete);
+        require(request.approvalCount > (backersCount / 2));
+
+        (bool success, ) = request.recipient.call{value: request.amount}("");
+        require(success, "Transfer failed.");
+        request.complete = true;
     }
 
     function getDetails()
