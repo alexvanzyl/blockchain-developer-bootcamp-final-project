@@ -2,6 +2,15 @@
 pragma solidity 0.8.7;
 
 contract Campaign {
+    struct ExpenditureRequest {
+        string description;
+        uint256 value;
+        address recipient;
+        bool complete;
+        uint256 approvalCount;
+        mapping(address => bool) approvals;
+    }
+
     string public title;
     string public description;
     uint256 public fundingGoal;
@@ -12,6 +21,13 @@ contract Campaign {
     mapping(address => bool) public backers;
     uint256 public backersCount;
     uint256 public timestamp;
+    uint256 public expenditureRequestsCount;
+    mapping(uint256 => ExpenditureRequest) public expenditureRequests;
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
 
     constructor(
         string memory _title,
@@ -42,10 +58,15 @@ contract Campaign {
 
     function createExpenditureRequest(
         string memory _description,
-        uint256 _amount,
+        uint256 _value,
         address _recipient
-    ) public {
-        // Create an expenditure request that will need to be approved by the backers.
+    ) public onlyOwner {
+        ExpenditureRequest storage r = expenditureRequests[
+            expenditureRequestsCount += 1
+        ];
+        r.description = _description;
+        r.value = _value;
+        r.recipient = _recipient;
     }
 
     function approveExpenditureRequest(uint256 _index) public {
