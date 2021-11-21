@@ -10,3 +10,11 @@ export interface Campaign {
   timestamp: Date;
   backers: number;
 }
+
+export interface ExpenditureRequest {
+  description: string;
+  value: number;
+  recipient: string;
+  completed: boolean;
+  approvalCount: number;
+}

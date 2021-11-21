@@ -5,6 +5,10 @@ import {
   CampaignsResponse,
   handler as createUseCampaigns,
 } from "./useCampaigns";
+import {
+  ExpenditureRequestsResponse,
+  handler as createUseExpenditureRequests,
+} from "./useExpenditureRequests";
 import { handler as createUseNetwork, NetworkResponse } from "./useNetwork";
 
 export type Web3Hooks = {
@@ -12,6 +16,9 @@ export type Web3Hooks = {
   useNetwork: () => NetworkResponse;
   useCampaigns: () => CampaignsResponse;
   useCampaign: (address: string | undefined) => CampaignResponse;
+  useExpenditureRequests: (
+    address: string | undefined
+  ) => ExpenditureRequestsResponse;
 };
 
 type SetupHooksProps = {
@@ -28,5 +35,6 @@ export const setupHooks = ({
     useNetwork: createUseNetwork(web3),
     useCampaigns: createUseCampaigns({ web3, contractFactory }),
     useCampaign: createUseCampaign(web3),
+    useExpenditureRequests: createUseExpenditureRequests(web3),
   };
 };
