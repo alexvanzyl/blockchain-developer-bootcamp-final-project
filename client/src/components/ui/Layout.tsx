@@ -4,10 +4,15 @@ import { Web3Provider } from "../providers";
 
 type LayoutProps = {
   pageName: string;
+  pageNameSub?: string;
   children: React.ReactNode;
 };
 
-const Layout = ({ pageName, children }: LayoutProps): JSX.Element => {
+const Layout = ({
+  pageName,
+  pageNameSub,
+  children,
+}: LayoutProps): JSX.Element => {
   return (
     <Web3Provider>
       <WrongNetworkNotification />
@@ -18,6 +23,11 @@ const Layout = ({ pageName, children }: LayoutProps): JSX.Element => {
             <h1 className="text-3xl font-bold leading-tight text-gray-900">
               {pageName}
             </h1>
+            {pageNameSub && (
+              <h2 className="text-sm leading-tight text-gray-500 truncate">
+                {pageNameSub}
+              </h2>
+            )}
           </div>
         </header>
         <main>

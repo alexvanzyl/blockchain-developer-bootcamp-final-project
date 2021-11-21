@@ -5,7 +5,12 @@ import {
   CampaignDetailsStats,
 } from "@components/campaign/details";
 import { useAccount, useCampaign } from "@components/web3/hooks";
-import type { InferGetStaticPropsType, NextPage } from "next";
+import type {
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+  NextPage,
+} from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 
 export async function getStaticPaths() {
@@ -15,9 +20,9 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({ params }: GetStaticPropsContext) {
   return {
-    props: { pageName: "Campaign" },
+    props: { pageName: "Campaign", pageNameSub: params?.cid },
   };
 }
 
@@ -31,6 +36,11 @@ const ViewCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
 
     return (
       <>
+        <Head>
+          <title>Siid | Campaign Details</title>
+          <meta name="description" content="Campaign details" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
         {campaign.hasInitialResponse ? (
           campaign.data ? (
             <div>
