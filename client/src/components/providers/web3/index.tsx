@@ -61,10 +61,15 @@ export default function Web3Provider({ children }: Props): JSX.Element {
         (await detectEthereumProvider()) as ExternalProviderExtended;
       if (provider) {
         const web3 = new ethers.providers.Web3Provider(provider);
+        const networkId = process.env.NEXT_PUBLIC_NETWORK_ID
+          ? process.env.NEXT_PUBLIC_NETWORK_ID
+          : "1";
+
         const contractFactory = new ethers.Contract(
-          CampaignFactory.networks[process.env.NEXT_PUBLIC_NETWORK_ID].address,
+          (CampaignFactory as any).networks[networkId].address,
           CampaignFactory.abi
         );
+
         setWeb3Api({
           provider,
           web3,

@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 
 export async function getStaticPaths() {
   return {
-    paths: [{ params: { cid: "" } }],
+    paths: [{ params: { cid: "1" } }],
     fallback: true,
   };
 }

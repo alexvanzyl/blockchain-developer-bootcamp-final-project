@@ -4,8 +4,7 @@ import { ethers } from "ethers";
 import { parseCampaignDetails } from "src/utils";
 import useSWR, { SWRResponse } from "swr";
 
-export interface CampaignResponse
-  extends SWRResponse<Campaign | null, unknown> {}
+export interface CampaignResponse extends SWRResponse<Campaign | null, any> {}
 
 export const handler =
   (web3: ethers.providers.Web3Provider | null) =>

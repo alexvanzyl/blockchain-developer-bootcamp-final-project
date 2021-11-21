@@ -5,7 +5,7 @@ import { ExternalProviderExtended } from "..";
 
 export interface NetworkResponse
   extends SWRResponse<string | undefined, unknown> {
-  target: number;
+  target: string;
   isSupported: boolean;
 }
 
@@ -18,7 +18,10 @@ const NETWORKS: Record<number, string> = {
   1337: "Ganache",
 };
 
-const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID];
+const chainId: number = process.env.NEXT_PUBLIC_TARGET_CHAIN_ID
+  ? parseInt(process.env.NEXT_PUBLIC_TARGET_CHAIN_ID)
+  : 1;
+const targetNetwork = NETWORKS[chainId];
 
 export const handler =
   (web3: ethers.providers.Web3Provider | null) => (): NetworkResponse => {
@@ -33,9 +36,12 @@ export const handler =
     const provider = web3?.provider;
     useEffect(() => {
       provider &&
-        (provider as ExternalProviderExtended).on("chainChanged", (chainId) => {
-          mutate(NETWORKS[parseInt(chainId, 16)]);
-        });
+        (provider as ExternalProviderExtended).on(
+          "chainChanged",
+          (chainId: string) => {
+            mutate(NETWORKS[parseInt(chainId, 16)]);
+          }
+        );
     }, [provider, mutate]);
 
     return {
