@@ -10,6 +10,14 @@ import "./Campaign.sol";
 contract CampaignFactory {
     address[] public campaigns;
 
+    /// @notice Emitted when a new Campaign contract is created
+    /// @param campaignContractAddress The address of the newly created Campaign contract
+    /// @param campaignContractOwner The address of the owner of the Campaign contract
+    event NewCampaignCreated(
+        address indexed campaignContractAddress,
+        address indexed campaignContractOwner
+    );
+
     /// @notice Create a new Campaign
     /// @param _title The title or name of the Campaign
     /// @param _description A brief description about the Campaign
@@ -31,7 +39,9 @@ contract CampaignFactory {
             _imageURL,
             msg.sender
         );
-        campaigns.push(address(newCampaign));
+        campaignContractAddress = address(newCampaign);
+        campaigns.push(campaignContractAddress);
+        emit NewCampaignCreated(campaignContractAddress, msg.sender);
     }
 
     /// @notice Get a list all Campaign contract addresses
