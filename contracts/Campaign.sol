@@ -143,7 +143,7 @@ contract Campaign is Ownable {
 
         request.approvals[msg.sender] = true;
         request.approvalCount += 1;
-        emit ExpenditureApproved(_index, msg.sender);
+        emit ExpenditureRequestApproved(_index, msg.sender);
     }
 
     /// @notice Finalize expenditure and send funds to recipient
@@ -157,7 +157,11 @@ contract Campaign is Ownable {
         (bool success, ) = request.recipient.call{value: request.amount}("");
         require(success, "Transfer failed.");
         request.complete = true;
-        emit ExpenditureFinalized(_index, request.recipient, request.amount);
+        emit ExpenditureRequestFinalized(
+            _index,
+            request.recipient,
+            request.amount
+        );
     }
 
     /// @notice Get public details of the Campaign

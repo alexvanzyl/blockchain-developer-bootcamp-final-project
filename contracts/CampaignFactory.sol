@@ -40,7 +40,7 @@ contract CampaignFactory {
             _imageURL,
             msg.sender
         );
-        campaignContractAddress = address(newCampaign);
+        address campaignContractAddress = address(newCampaign);
         campaigns.push(campaignContractAddress);
         emit NewCampaignCreated(campaignContractAddress, msg.sender);
     }
