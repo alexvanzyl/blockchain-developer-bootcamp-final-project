@@ -8,6 +8,7 @@ import "./Campaign.sol";
 /// @notice Creates a new Campaign contract
 /// @dev Used for creating and listing Campaigns
 contract CampaignFactory {
+    /// @notice List of all Campaign contract addresses
     address[] public campaigns;
 
     /// @notice Emitted when a new Campaign contract is created
