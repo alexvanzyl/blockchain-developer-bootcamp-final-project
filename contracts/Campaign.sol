@@ -19,37 +19,59 @@ contract Campaign is Ownable {
 
     /// @notice Title of the campaign
     string public title;
-
     /// @notice Brief description explaining the campaign
     string public description;
-
     /// @notice Amount of funding in ether that the campaign is trying to raise
     uint256 public fundingGoal;
-
     /// @notice The total amound of funding in ether that the campaign has recieved so far
     uint256 public totalFundingRecieved;
-
     /// @notice The minimum amount in ether that a backer can contribute
     uint256 public minimumContribution;
-
     /// @notice The image URL for the campaigns' cover image.
     string public imageURL;
-
     /// @dev Mapping to check if the message sender has backed the campaign
     mapping(address => bool) private backers;
-
     /// @notice The number of backers that have contributed to the campaign
     uint256 public backersCount;
-
     /// @notice The timestamp of when the campaign was created
     uint256 public timestamp;
-
     /// @notice Number of expenditures request made by campaign owner
     uint256 public expenditureRequestsCount;
-
     /// @notice Mapping of expenditure requests by ID
     /// @dev Mapping of expenditures starting at index of 1
     mapping(uint256 => ExpenditureRequest) public expenditureRequests;
+
+    /// @notice Emitted when new funding is recieved
+    /// @param backerAddress The address of the backer funding the campaign
+    event FundingRecieved(address indexed backerAddress);
+
+    /// @notice Emitted when new expenditure is requested
+    /// @param expenditureRequestIndex The index of the expenditure request
+    /// @param recipientAddress The address of the recipient that will recieve the funds
+    /// @param amount The amount that will be transfered to the recipient
+    event NewExpenditureRequestCreated(
+        uint256 expenditureRequestIndex,
+        address indexed recipientAddress,
+        uint256 amount
+    );
+
+    /// @notice Emitted when an expenditure request is approved by a backer
+    /// @param expenditureRequestIndex The index of the expenditure request
+    /// @param backersAddress The address of the backer that approved the expenditure request
+    event ExpenditureRequestApproved(
+        uint256 expenditureRequestIndex,
+        address indexed backersAddress
+    );
+
+    /// @notice Emitted when an expenditure request is finalized
+    /// @param expenditureRequestIndex The index of the expenditure request
+    /// @param recipientAddress The address of the recipient that will recieve the funds
+    /// @param amount The amount that will be transfered to the recipient
+    event ExpenditureRequestFinalized(
+        uint256 expenditureRequestIndex,
+        address indexed recipientAddress,
+        uint256 amount
+    );
 
     modifier onlyBacker() {
         require(backers[msg.sender]);
@@ -82,6 +104,7 @@ contract Campaign is Ownable {
         }
         backers[msg.sender] = true;
         totalFundingRecieved += msg.value;
+        emit FundingRecieved(msg.sender);
     }
 
     /// @notice Create expenditure request
@@ -104,6 +127,11 @@ contract Campaign is Ownable {
         r.description = _description;
         r.amount = _amount;
         r.recipient = _recipient;
+        emit NewExpenditureRequestCreated(
+            expenditureRequestsCount,
+            _recipient,
+            _amount
+        );
     }
 
     /// @notice Approve expenditure request
@@ -115,6 +143,7 @@ contract Campaign is Ownable {
 
         request.approvals[msg.sender] = true;
         request.approvalCount += 1;
+        emit ExpenditureApproved(_index, msg.sender);
     }
 
     /// @notice Finalize expenditure and send funds to recipient
@@ -128,6 +157,7 @@ contract Campaign is Ownable {
         (bool success, ) = request.recipient.call{value: request.amount}("");
         require(success, "Transfer failed.");
         request.complete = true;
+        emit ExpenditureFinalized(_index, request.recipient, request.amount);
     }
 
     /// @notice Get public details of the Campaign
