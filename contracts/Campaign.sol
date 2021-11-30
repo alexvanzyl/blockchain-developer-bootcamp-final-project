@@ -154,9 +154,10 @@ contract Campaign is Ownable {
         require(!request.complete);
         require(request.approvalCount > (backersCount / 2));
 
+        request.complete = true;
+
         (bool success, ) = request.recipient.call{value: request.amount}("");
         require(success, "Transfer failed.");
-        request.complete = true;
         emit ExpenditureRequestFinalized(
             _index,
             request.recipient,
