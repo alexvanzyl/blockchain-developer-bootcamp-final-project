@@ -24,7 +24,7 @@ contract Campaign is Ownable {
     /// @notice Amount of funding in ether that the campaign is trying to raise
     uint256 public fundingGoal;
     /// @notice The total amound of funding in ether that the campaign has recieved so far
-    uint256 public totalFundingRecieved;
+    uint256 public totalFundingReceived;
     /// @notice The minimum amount in ether that a backer can contribute
     uint256 public minimumContribution;
     /// @notice The image URL for the campaigns' cover image.
@@ -97,13 +97,16 @@ contract Campaign is Ownable {
 
     /// @notice Send funding to campaign contract
     function fund() public payable {
-        require(msg.value >= minimumContribution);
+        require(
+            msg.value >= minimumContribution,
+            "Value is less than the allowed minimum contribution."
+        );
 
         if (backers[msg.sender] != true) {
             backersCount += 1;
         }
         backers[msg.sender] = true;
-        totalFundingRecieved += msg.value;
+        totalFundingReceived += msg.value;
         emit FundingRecieved(msg.sender);
     }
 
@@ -190,7 +193,7 @@ contract Campaign is Ownable {
             minimumContribution,
             backersCount,
             imageURL,
-            totalFundingRecieved,
+            totalFundingReceived,
             address(this),
             owner(),
             timestamp
