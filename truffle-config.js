@@ -1,3 +1,6 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -18,7 +21,7 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -45,6 +48,15 @@ module.exports = {
       host: "127.0.0.1", // Localhost (default: none)
       port: 8545, // Standard Ethereum port (default: none)
       network_id: "*", // Any network (default: none)
+    },
+    rinkeby: {
+      provider: () =>
+        new HDWalletProvider(
+          process.env.RINKEBY_MNEMONIC,
+          `https://rinkeby.infura.io/v3/${process.env.RINKEBY_INFURA_PROJECT_ID}`
+        ),
+      network_id: 4,
+      gas: 5500000,
     },
     // Another network with more advanced options...
     // advanced: {
