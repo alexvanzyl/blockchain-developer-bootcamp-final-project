@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { classNames } from "src/utils";
 
@@ -38,6 +39,7 @@ const CreateCampaignExpenditure: NextPage<
     reset,
     formState: { errors },
   } = useForm<FormData>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (web3) {
@@ -48,6 +50,7 @@ const CreateCampaignExpenditure: NextPage<
       );
 
       try {
+        setIsLoading(true);
         const txn = await campaignContract.createExpenditureRequest(
           data.description,
           ethers.utils.parseUnits(data.amount.toString(), "ether"),
@@ -55,9 +58,11 @@ const CreateCampaignExpenditure: NextPage<
         );
         await txn.wait();
         reset();
+        setIsLoading(false);
 
         router.push(`/campaigns/${router.query.cid}/expenditures`);
       } catch (e) {
+        setIsLoading(false);
         console.log(e);
       }
     }
@@ -185,8 +190,12 @@ const CreateCampaignExpenditure: NextPage<
           </form>
         </div>
         <div className="flex justify-end px-4 py-4 sm:px-6">
-          <Button type="submit" onClick={handleSubmit(onSubmit)}>
-            <span>Create</span>
+          <Button
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Create"}
           </Button>
         </div>
       </div>

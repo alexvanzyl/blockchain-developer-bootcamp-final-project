@@ -4,6 +4,7 @@ import Button from "@components/ui/Button";
 import CampaignContract from "@contracts/Campaign.json";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { classNames } from "src/utils";
 
 type Props = {
@@ -19,6 +20,7 @@ const CampaignExpenditureRequestsTableRow = ({
 }: Props): JSX.Element => {
   const router = useRouter();
   const { web3 } = useWeb3();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onApprove = async (): Promise<void> => {
     if (web3) {
@@ -28,8 +30,10 @@ const CampaignExpenditureRequestsTableRow = ({
         web3.getSigner()
       );
 
+      setIsLoading(true);
       const txn = await campaignContract.approveExpenditureRequest(index + 1);
       await txn.wait();
+      setIsLoading(false);
 
       router.push(`/campaigns/${router.query.cid}/expenditures`);
     }
@@ -43,8 +47,10 @@ const CampaignExpenditureRequestsTableRow = ({
         web3.getSigner()
       );
 
+      setIsLoading(true);
       const txn = await campaignContract.finalizeExpenditureRequest(index + 1);
       await txn.wait();
+      setIsLoading(false);
 
       router.push(`/campaigns/${router.query.cid}/expenditures`);
     }
@@ -77,28 +83,39 @@ const CampaignExpenditureRequestsTableRow = ({
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {expenditure.approvalCount} / {totalBackers}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-        <Button
-          type="button"
-          variant="yellow"
-          size="xs"
-          onClick={onApprove}
-          disabled={expenditure.complete}
+      {expenditure.complete ? (
+        <td
+          colSpan={2}
+          className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-green-500"
         >
-          Approve
-        </Button>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-        <Button
-          type="button"
-          variant="green"
-          size="xs"
-          onClick={onFinialize}
-          disabled={expenditure.complete}
-        >
-          Finalize
-        </Button>
-      </td>
+          Approved
+        </td>
+      ) : (
+        <>
+          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <Button
+              type="button"
+              variant="yellow"
+              size="xs"
+              onClick={onApprove}
+              disabled={expenditure.complete || isLoading}
+            >
+              {isLoading ? "Loading..." : "Approve"}
+            </Button>
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <Button
+              type="button"
+              variant="green"
+              size="xs"
+              onClick={onFinialize}
+              disabled={expenditure.complete || isLoading}
+            >
+              {isLoading ? "Loading..." : "Finalize"}
+            </Button>
+          </td>
+        </>
+      )}
     </tr>
   );
 };

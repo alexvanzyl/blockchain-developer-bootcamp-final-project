@@ -37,6 +37,7 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
       formState: { errors },
     } = useForm<FormData>();
     const [fileUrl, setFileUrl] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     async function onChange(e: ChangeEvent<HTMLInputElement>) {
       const file = e.target.files ? e.target.files[0] : null;
@@ -55,19 +56,26 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
       if (web3 && contractFactory && fileUrl) {
-        const { title, description, fundingGoal, minimumContribution } = data;
-        const factory = contractFactory.connect(web3.getSigner());
-        const txn = await factory.createCampaign(
-          title,
-          description,
-          ethers.utils.parseUnits(fundingGoal.toString(), "ether"),
-          ethers.utils.parseUnits(minimumContribution.toString(), "ether"),
-          fileUrl
-        );
-        await txn.wait();
-        reset();
-        let campaigns = await factory.getCampaigns();
-        router.push(`/campaigns/${campaigns.slice(-1)[0]}/details`);
+        try {
+          setIsLoading(true);
+          const { title, description, fundingGoal, minimumContribution } = data;
+          const factory = contractFactory.connect(web3.getSigner());
+          const txn = await factory.createCampaign(
+            title,
+            description,
+            ethers.utils.parseUnits(fundingGoal.toString(), "ether"),
+            ethers.utils.parseUnits(minimumContribution.toString(), "ether"),
+            fileUrl
+          );
+          await txn.wait();
+          reset();
+          setIsLoading(false);
+          let campaigns = await factory.getCampaigns();
+          router.push(`/campaigns/${campaigns.slice(-1)[0]}/details`);
+        } catch (err) {
+          setIsLoading(false);
+          console.log(err);
+        }
       }
     };
 
@@ -262,8 +270,12 @@ const CreateCampaign: NextPage<InferGetStaticPropsType<typeof getStaticProps>> =
             </form>
           </div>
           <div className="flex justify-end px-4 py-4 sm:px-6">
-            <Button type="submit" onClick={handleSubmit(onSubmit)}>
-              <span>Create</span>
+            <Button
+              type="submit"
+              onClick={handleSubmit(onSubmit)}
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : "Create"}
             </Button>
           </div>
         </div>
