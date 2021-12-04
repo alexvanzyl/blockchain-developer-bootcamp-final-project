@@ -22240,7 +22240,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-04T09:45:54.757Z",
+  "updatedAt": "2021-12-04T11:39:41.847Z",
   "devdoc": {
     "author": "Alexander van Zyl",
     "details": "A Campaign is created using the CampaignFactory contract and ownership is transfered to the message sender",
