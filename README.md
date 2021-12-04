@@ -1,6 +1,9 @@
 # S🌱🌱D
 ## Demo
-TBA
+https://siid.vercel.app/
+
+## Screencast
+https://youtu.be/SjUR6bcou2M
 
 ## Description
 Siid (_pronounced seed_) is decentralized crowdfunding application that allows campaign backers to vote on how funding is spent by the campaign owners. The objective is to bring complete transparency to crowdfunding and mitigate fraudulent campaigns.
@@ -32,7 +35,7 @@ Siid (_pronounced seed_) is decentralized crowdfunding application that allows c
 - TailwindCSS
 - Solidity
 - Truffle & Ganache
-- Netlify
+- Vercel
 
 
 # Directory Structure
@@ -70,7 +73,7 @@ Siid (_pronounced seed_) is decentralized crowdfunding application that allows c
 ```
 
 ## Running project
-### 1. Run `ganache-cli` in a separate terminal (_make sure to set the network ID to 5777_)
+### 1. Run `ganache-cli` in a separate terminal (_make sure to set the network ID to 5777. Default port is 8545_)
 ```shell
 > ganache-cli -i 5777
 ```
